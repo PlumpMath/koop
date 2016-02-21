@@ -12,7 +12,8 @@
                  [ring.middleware.logger "0.5.0"]
                  [compojure "1.4.0"]
                  [org.omcljs/om "1.0.0-alpha28"]
-                 [environ "1.0.2"]]
+                 [environ "1.0.2"]
+                 [com.datomic/datomic-pro "0.9.5350"]]
 
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-environ "1.0.1"]]
