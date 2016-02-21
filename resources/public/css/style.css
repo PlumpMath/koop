@@ -1,3 +1,22 @@
 h1 {
   text-decoration: underline;
 }
+
+.root {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    flex: 1 100%;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    flex: 1 100%;
+}
+
+.footer {
+    flex: 1 100%;
+}

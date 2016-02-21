@@ -13,7 +13,9 @@
                  [compojure "1.4.0"]
                  [org.omcljs/om "1.0.0-alpha28"]
                  [environ "1.0.2"]
-                 [com.datomic/datomic-pro "0.9.5350"]]
+                 [com.datomic/datomic-pro "0.9.5350" :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]
+                 [datomic-schema "1.3.0"]]
 
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-environ "1.0.1"]]
