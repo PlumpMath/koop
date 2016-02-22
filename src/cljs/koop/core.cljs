@@ -1,16 +1,24 @@
 (ns koop.core
   (:require [om.next :as om :refer-macros [defui]]
             [om.dom :as dom :include-macros true]
-            [goog.dom :as gdom]))
+            [goog.dom :as gdom]
+            [cljs.pprint :as pp]))
 
 (enable-console-print!)
+
+;(load-namespace 'koop.core)
+;(in-ns 'koop.core)
 
 
 (defui MemberView
 
-  static om/Ident
-  (ident [this {:keys [id]}]
-    [:id id])
+  ;static om/Ident
+  ;(ident [this {:keys [id]}]
+  ;  [:id id])
+
+  ;static om/IQueryParams
+  ;(params [this]
+  ;  {:id 42})
 
   static om/IQuery
   (query [this]
@@ -38,27 +46,32 @@
 (def members-view (om/factory MembersView))
 
 (defui HeaderView
-       static om/IQuery
-       (query [this]
-              [:name :token])
+   static om/IQuery
+   (query [this]
+          [:name :token])
 
-       Object
-       (render [this]
-               (dom/header #js {:className "header"} "Header View")))
+   Object
+   (render [this]
+           (dom/header #js {:className "header"} "Header View")))
 
 (def header-view (om/factory HeaderView))
 
 
 (defui MainView
+
   static om/IQuery
   (query [this]
-    [{:members (om/get-query MemberView)}])
+    ;(let [subquery (om/get-query MembersView)]
+    ;  `[{:members ~subquery}])                             ;{:list/two ~subquery}
+      ;[{:members (om/get-query MemberView)}]
+    [(om/get-query MembersView)]
+    )
 
   Object
-  (render [this] (let [{:keys [members]} (om/props this)]
+  (render [this] (let [props (om/props this)]
                    (dom/div #js {:className "main"}
-                            (js/alert members)
-                            ;(members-view data)
+                            (pp/pprint props)
+                            (members-view (:members props))
                             ))))
 
 (def main-view (om/factory MainView))
@@ -78,6 +91,11 @@
 
 (defui RootView
 
+  static om/IQuery
+  (query [this]
+    [(om/get-query MembersView)]
+    )
+
        Object
        (render [this]
                (dom/div #js {:className "root"}
@@ -91,24 +109,24 @@
 ;;
 ;; Data
 ;;
-
 (defonce app-state (atom
-                     {:members  [{:id 123 :name "Alan" :address "11916 Big Blue Road"} {:id 456 :name "Dave" :address "123 Abbywood"}]
-                      :projects [{:id 976 :name "Hermes" :members [123 456]} {:id 654 :name "Clara" :members [123]}]}))
+                     {:members  {123 {:id 123 :name "Alan" :address "11916 Big Blue Road"} 456 {:id 456 :name "Dave" :address "123 Abbywood"}}
+                      :projects {976 {:id 976 :name "Hermes" :members [123 456]} 654 {:id 654 :name "Clara" :members [123]}}}))
 
 ;;
 ;; Data read multimethods
 ;;
 
-(defmulti read om/dispatch)
-
 (defn get-members [state key]
   (let [st @state]
+    (pp/pprint key)
     (into [] (map #(get-in st %)) (get st key))))
 
 (defn get-projects [state key]
   (let [st @state]
     (into [] (map #(get-in st %)) (get st key))))
+
+(defmulti read om/dispatch)
 
 (defmethod read :members
   [{:keys [state] :as env} key params]
@@ -122,8 +140,8 @@
   (om/reconciler
     {:state     (atom app-state)
      :normalize false
-     :read read
-     ;:parser    (om/parser {:read p/read :mutate p/mutate})
+     ;:read read
+     ;:parser    (om/parser {:read read })                   ;:mutate mutate
      ;:send      (util/transit-post "/api")
      }))
 
