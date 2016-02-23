@@ -16,7 +16,8 @@
                  [com.datomic/datomic-pro "0.9.5350" :exclusions [org.slf4j/slf4j-nop org.slf4j/log4j-over-slf4j]]
                  [org.slf4j/slf4j-log4j12 "1.6.4"]
                  [datomic-schema "1.3.0"]
-                 [datascript "0.15.0"]]
+                 [datascript "0.15.0"]
+                 [org.toomuchcode/clara-rules "0.10.0"]]
 
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-environ "1.0.1"]]
@@ -47,7 +48,7 @@
                 ;; Alternatively, you can configure a function to run every time figwheel reloads.
                 ;; :figwheel {:on-jsload "koop.core/on-figwheel-reload"}
 
-                :compiler {:main koop.core
+                :compiler {:main koop.db
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/koop.js"
                            :output-dir "resources/public/js/compiled/out"
